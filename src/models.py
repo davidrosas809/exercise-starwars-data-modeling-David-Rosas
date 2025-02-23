@@ -6,25 +6,47 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class Usuario(Base):
+    __tablename__ = 'usuario'
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(nullable=False)
-    address: Mapped["Address"] = relationship(back_populates="person")
+    user_name: Mapped[str] = mapped_column(nullable=True)
+    first_name: Mapped[str] = mapped_column(nullable=True)
+    last_name: Mapped[str] = mapped_column(nullable=True)
+
+class Favoritos(Base):
+    __tablename__ = 'favoritos'
+    id: Mapped[int] = mapped_column(primary_key=True)
 
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
+
+    #Relaciones de las bases de dtos ---------->
+
+    usuario_id: Mapped[str] = mapped_column(ForeignKey('usuario.id'), nullable=True)
+    usuario: Mapped["Usuario"] = relationship()
+    
+    planetas_id: Mapped[str] = mapped_column(ForeignKey('planetas.id'), nullable=True)
+    favoritos: Mapped["Planetas"] = relationship()
+    
+    personajes_id: Mapped[str] = mapped_column(ForeignKey('personajes.id'), nullable=True)
+    personajes: Mapped["Personajes"] = relationship()
+
+class Planetas(Base):
+    __tablename__ = 'planetas'
     id: Mapped[int] = mapped_column(primary_key=True)
-    street_name: Mapped[str]
-    street_number: Mapped[str]
-    post_code: Mapped[str] = mapped_column(nullable=False)
-    person_id: Mapped[int] = mapped_column(ForeignKey("person.id"))
-    person: Mapped["Person"] = relationship(back_populates="address")
+    Name: Mapped[str] = mapped_column(nullable=True)
+    gravity: Mapped[str] = mapped_column(nullable=True)
+    diameter: Mapped[str] = mapped_column(nullable=True)
+    terrain: Mapped[str] = mapped_column(nullable=True)
+    climate: Mapped[str] = mapped_column(nullable=True)  
+
+class Personajes(Base):
+    __tablename__= 'personajes'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(nullable=True)
+    height: Mapped[str] = mapped_column(nullable=True)
+    gender: Mapped[str] = mapped_column(nullable=True)
+    birth_year: Mapped[str] = mapped_column(nullable=True)
+    eye_color: Mapped[str] = mapped_column(nullable=True)
 
     def to_dict(self):
         return {}
